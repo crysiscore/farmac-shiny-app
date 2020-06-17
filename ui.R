@@ -77,7 +77,7 @@ shinyUI(fluidPage(
             ),
             fluidRow(
                 column(1, h5("Referido_Para:") ),
-                column(4, offset = 1, h6(textOutput("txt_clinicname")) )
+                column(4, offset = 1, h5(textOutput("txt_clinicname")) )
             ),
             fluidRow(
                 column(1, h5("Importado_Farmac:") ),
