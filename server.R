@@ -11,7 +11,7 @@ library(shiny)
 library(dplyr)
 library(RPostgreSQL)
 
-wd <- '~/Git/shinyapp/farmac/'
+wd <- '/data'
 setwd(wd)
 source('misc_scripts.R')
 
@@ -22,26 +22,26 @@ shinyServer(function(input, output , session) {
   con_farmac_sync  <-  getLocalServerCon()
   
   df_reffered_patients <- reactivePoll(1800000, session,
-                       # This function returns the time that log_file was last modified
+                      
                        checkFunc = function() {
                          
                          # nrows <- dbGetQuery(con_farmac_sync, " select count(*)  as total from sync_temp_patients ;")
                          # print(nrows$total)
                          print("checking")
                        },
-                       # This function returns the content of log_file
+                       # This function returns the content of sync_temp_patients
                        valueFunc = function() {
                          dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
                        }
   )
   df_patient_dispenses <- reactivePoll(1800000, session,
-                                       # This function returns the time that log_file was last modified
+                               
                                        checkFunc = function() {
                                          # nrows <- dbGetQuery(con_farmac_sync, " select count(*)  as total from sync_temp_dispense ;")
                                          # print(nrows$total)
                                          print("checking")
                                        },
-                                       # This function returns the content of log_file
+                                       # This function returns the content of sync_temp_dispense
                                        valueFunc = function() {
                                          dbGetQuery(con_farmac_sync, " select * from sync_temp_dispense ;")
                                        }

@@ -1,10 +1,9 @@
 
 library(RPostgreSQL)
-library(stringi)
-library(stringdist)
+#library(stringi)
+#library(stringdist)
 library(dplyr)
 
-setwd('~/Git/shinyapp/farmac/')
 source('db_con_functions.R')
 
 ## con farmac_sync
