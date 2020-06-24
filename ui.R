@@ -8,9 +8,31 @@
 #
 
 library(shiny)
+library(shinymanager)
+
+inactivity <- "function idleTimer() {
+var t = setTimeout(logout, 120000);
+window.onmousemove = resetTimer; // catches mouse movements
+window.onmousedown = resetTimer; // catches mouse movements
+window.onclick = resetTimer;     // catches mouse clicks
+window.onscroll = resetTimer;    // catches scrolling
+window.onkeypress = resetTimer;  //catches keyboard actions
+
+function logout() {
+window.close();  //close the window
+}
+
+function resetTimer() {
+clearTimeout(t);
+t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
+}
+}
+idleTimer();"
+
+
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
+secure_app(head_auth = tags$script(inactivity), fluidPage(
     tags$head(
         tags$style(HTML("
       @import url('//fonts.googleapis.com/css?family=Lobster|Cabin:400,700');
@@ -25,11 +47,13 @@ shinyUI(fluidPage(
     "))
     ),
     
+    
     # Application title
     titlePanel("Pacientes Farmac"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
+
         sidebarPanel(
             textInput('nid', 'NID: ', value = "", width = NULL,
                      placeholder = 'NID do Paciente'),
@@ -96,7 +120,8 @@ shinyUI(fluidPage(
               
             ),
             fluidRow(
-            tableOutput('df_dispenses') )
+            tableOutput('df_dispenses') ), 
+            verbatimTextOutput("res_auth")
         )
     )
 ))
