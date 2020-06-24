@@ -16,7 +16,7 @@ setwd(wd)
 source('misc_scripts.R')
 
 
-# Define server logic required to draw a histogram
+# Define server logic required
 shinyServer(function(input, output , session) {
 
   con_farmac_sync  <-  getLocalServerCon()
@@ -54,19 +54,21 @@ shinyServer(function(input, output , session) {
                                                                                         dateofbirth,imported,clinicname,mainclinicname)
         
         if(nrow(patient_info)==0){
-            output$txt_patientid <- renderText(patient_info$patientid[1])
-            output$txt_firstnames <- renderText(patient_info$firstnames[1])
-            output$txt_lastname <- renderText(patient_info$lastname[1])
-            output$txt_dateofbirth <- renderText(substr(as.character(patient_info$dateofbirth[1]), 1,10))
-            output$txt_mainclinicname <- renderText(patient_info$mainclinicname[1])
-            output$txt_clinicname <- renderText(patient_info$clinicname[1])
-            output$txt_imported <- renderText(patient_info$imported[1])
-            
+          
             df_pat_dispenses <-  df_patient_dispenses() %>% filter(patientid==input$nid) %>% select(dispensedate,
                                                                                                     regimeid,dispensatrimestral,drugname,
                                                                                                     dateexpectedstring) %>% arrange(dispensedate)
             
             if(nrow(df_pat_dispenses)>0){
+              
+              output$txt_patientid <- renderText(df_pat_dispenses$patientid[1])
+              output$txt_firstnames <- renderText(df_pat_dispenses$patientfirstname[1])
+              output$txt_lastname <- renderText(df_pat_dispenses$patientlastname[1])
+              # txt_dateofbirth nao existe na tabela sync_temp_dispense
+              #output$txt_dateofbirth <- renderText(substr(as.character(patient_info$dateofbirth[1]), 1,10))
+              output$txt_mainclinicname <- renderText(patient_info$sync_temp_dispenseid[1])
+              output$txt_clinicname <- renderText(patient_info$clinic_name_farmac[1])
+              output$txt_imported <- renderText("sim")
               
               
               df_pat_dispenses$dispensedate <- substr(as.character(df_pat_dispenses$dispensedate),1,10)
@@ -80,8 +82,16 @@ shinyServer(function(input, output , session) {
               names(df_pat_dispenses)[5]<- "Data Prox. Consulta"
               df_pat_dispenses <- df_pat_dispenses[0,]
               output$df_dispenses <- renderTable(df_pat_dispenses)
+              
             } else {
               
+              output$txt_patientid <- renderText(patient_info$patientid[1])
+              output$txt_firstnames <- renderText(patient_info$firstnames[1])
+              output$txt_lastname <- renderText(patient_info$lastname[1])
+              output$txt_dateofbirth <- renderText(substr(as.character(patient_info$dateofbirth[1]), 1,10))
+              output$txt_mainclinicname <- renderText(patient_info$mainclinicname[1])
+              output$txt_clinicname <- renderText(patient_info$clinicname[1])
+              output$txt_imported <- renderText(patient_info$imported[1])
               output$df_dispenses <- renderTable(df_pat_dispenses)
             }
             
@@ -93,7 +103,7 @@ shinyServer(function(input, output , session) {
             output$txt_mainclinicname <- renderText(patient_info$mainclinicname[1])
             output$txt_clinicname <- renderText(patient_info$clinicname[1])
             if(is.na(patient_info$imported[1])){
-                output$txt_imported <- renderText("Nao")
+                output$txt_imported <- renderText("Sim")
             } else{
                 output$txt_imported <- renderText(patient_info$imported[1])
             }
