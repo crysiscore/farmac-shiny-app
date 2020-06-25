@@ -15,14 +15,14 @@ library(dplyr)
 library(RPostgreSQL)
 
 
-#wd <- '/data'
-#setwd(wd)
+wd <- '/data'
+setwd(wd)
 source('misc_scripts.R')
 
 # data.frame with credentials info
 credentials <- data.frame(
-  user = c("admin", "farmac", "farmac", "farmac"),
-  password = c("eSaude123", "farmac", "arv", "ccs"),
+  user = c("farmac", "farmac", "farmac", "farmac"),
+  password = c("arv", "farmac", "arv2", "ccs"),
   # comment = c("alsace", "auvergne", "bretagne"), %>% 
   stringsAsFactors = FALSE
 )
