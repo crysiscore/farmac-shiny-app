@@ -21,8 +21,8 @@ source('misc_scripts.R')
 
 # data.frame with credentials info
 credentials <- data.frame(
-  user = c("farmac", "farmac", "farmac", "farmac"),
-  password = c("arv", "farmac", "arv2", "ccs"),
+  user = c("admin", "farmac", "farmacia", "idart"),
+  password = c("arv", "idart", "farmacia", "farmac"),
   # comment = c("alsace", "auvergne", "bretagne"), %>% 
   stringsAsFactors = FALSE
 )
@@ -54,7 +54,7 @@ shinyServer(function(input, output , session) {
                        },
                        # This function returns the content of sync_temp_patients
                        valueFunc = function() {
-                         dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
+                         RPostgreSQL::dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
                        }
   )
   df_patient_dispenses <- reactivePoll(1800000, session,
@@ -66,7 +66,7 @@ shinyServer(function(input, output , session) {
                                        },
                                        # This function returns the content of sync_temp_dispense
                                        valueFunc = function() {
-                                         dbGetQuery(con_farmac_sync, " select * from sync_temp_dispense ;")
+                                         RPostgreSQL::dbGetQuery(con_farmac_sync, " select * from sync_temp_dispense ;")
                                        }
   )
     
