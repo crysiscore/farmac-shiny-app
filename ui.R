@@ -120,8 +120,8 @@ secure_app(head_auth = tags$script(inactivity), fluidPage(
               
             ),
             fluidRow(
-            tableOutput('df_dispenses') ), 
-            verbatimTextOutput("res_auth")
+            tableOutput('df_dispenses') ) 
+           # verbatimTextOutput("res_auth")
         )
     )
 ))

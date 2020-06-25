@@ -29,18 +29,19 @@ credentials <- data.frame(
 )
 
 
+
+con_farmac_sync  <-  getLocalServerCon()
+
+
 # Define server logic required
 shinyServer(function(input, output , session) {
 
   
-  con_farmac_sync  <-  getLocalServerCon()
-  
-  
   result_auth <- secure_server(check_credentials = check_credentials(credentials))
   
-  output$res_auth <- renderPrint({
-    reactiveValuesToList(result_auth)
-  })
+  # output$res_auth <- renderPrint({
+  #   reactiveValuesToList(result_auth)
+  # })
   
 
   
