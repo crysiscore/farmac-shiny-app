@@ -28,6 +28,8 @@ credentials <- data.frame(
 )
 
 
+con_farmac_sync  <-  getLocalServerCon()
+
 
 # Define server logic required
 shinyServer(function(input, output , session) {
@@ -39,12 +41,10 @@ shinyServer(function(input, output , session) {
     reactiveValuesToList(result_auth)
   })
   
-  
-  con_farmac_sync  <-  getLocalServerCon()
-  
+
   
   
-  df_reffered_patients <- reactivePoll(21600000, session,
+  df_reffered_patients <- reactivePoll(1800000, session,
                       
                        checkFunc = function() {
                          
@@ -57,7 +57,7 @@ shinyServer(function(input, output , session) {
                          dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
                        }
   )
-  df_patient_dispenses <- reactivePoll(21600000, session,
+  df_patient_dispenses <- reactivePoll(1800000, session,
                                
                                        checkFunc = function() {
                                          # nrows <- dbGetQuery(con_farmac_sync, " select count(*)  as total from sync_temp_dispense ;")
