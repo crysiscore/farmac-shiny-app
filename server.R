@@ -22,7 +22,11 @@ source('misc_scripts.R')
 # data.frame with credentials info
 credentials <- data.frame(
   user = c("admin", "farmac", "farmacia", "idart"),
+<<<<<<< HEAD
   password = c("arv", "idart", "farmacia", "farmac"),
+=======
+  password = c("arv", "arm", "farmacia", "farmac"),
+>>>>>>> 521e243a39de635abb221b32562d3f092b86bf0d
   # comment = c("alsace", "auvergne", "bretagne"), %>% 
   stringsAsFactors = FALSE
 )
