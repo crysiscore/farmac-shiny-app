@@ -153,5 +153,33 @@ shinyServer(function(input, output , session) {
     } 
     
   })
+  
+  
+  
+  dispenses <-   dbGetQuery(con_farmac_sync, " select * from sync_temp_dispense ;")
+  no_dups_dispenses <- distinct(dispenses,as.Date(dispensedate), drugname, patientid , .keep_all = TRUE )
+  names(no_dups_dispenses)[48] <- "d_dispensedate"
+  today= Sys.Date()
+  no_dups_dispenses   <- no_dups_dispenses %>% filter(d_dispensedate <= today)  %>% arrange(patientid,desc(dispensedate)) 
+  
+  # Total de pacientes com pelo menos um levantamento
+  total_pat_dispensa <- no_dups_dispenses %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(clinic_name_farmac)  %>%  summarise(total_pacientes_dispensados = n())
+  names(total_pat_dispensa)[1] <- "Farmacia"
+  
+  # Total de pacientes Referidos por Farmac
+  patients <- dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
+  total_pat_farmac <- patients %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(clinicname)  %>%  summarise(total_referidos = n())
+  names(total_pat_farmac)[1]<- "Farmacia"
+  
+  # Total de pacientes Referidos por US
+  total_pat_us    <- patients %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(mainclinicname)  %>%  summarise(total_referidos = n())
+  names(total_pat_us)[1]<- "Unidade_Sanitaria"
+  
+  # Sumario 
+  
+  output$df_referidos <- renderTable(total_pat_us)
+  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa) %>% select(Farmacia, total_referidos,total_pacientes_dispensados)
+  output$df_resumo <- renderTable(sumario)
+  
     #on.exit(dbDisconnect(con_farmac_sync), add = TRUE)
 })
