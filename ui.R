@@ -121,6 +121,18 @@ secure_app(head_auth = tags$script(inactivity), fluidPage(
             ),
             fluidRow(
             tableOutput('df_dispenses') ), 
+            fluidRow(
+              column(1, h5("") ),
+              column(4, h5("") )
+              
+            ),
+           
+            fluidRow( strong( h4("Pacientes Referidos Por US"))) ,
+            fluidRow(tableOutput('df_referidos') ), 
+
+            
+            fluidRow( strong( h4(""))) ,
+            fluidRow( tableOutput('df_resumo') ), 
             verbatimTextOutput("res_auth")
         )
     )
