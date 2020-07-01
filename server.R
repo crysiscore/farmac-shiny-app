@@ -168,6 +168,7 @@ shinyServer(function(input, output , session) {
   
   # Total de pacientes Referidos por Farmac
   patients <- dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
+  
   total_pat_farmac <- patients %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(clinicname)  %>%  summarise(total_referidos = n())
   names(total_pat_farmac)[1]<- "Farmacia"
   
@@ -178,7 +179,7 @@ shinyServer(function(input, output , session) {
   # Sumario 
   
   output$df_referidos <- renderTable(total_pat_us)
-  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa) %>% select(Farmacia, total_referidos,total_pacientes_dispensados)
+  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select(Farmacia...1, total_referidos,total_pacientes_dispensados)
   output$df_resumo <- renderTable(sumario)
   
     #on.exit(dbDisconnect(con_farmac_sync), add = TRUE)
