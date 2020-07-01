@@ -9,7 +9,7 @@
 
 library(shiny)
 library(shinymanager)
-library(dplyr)
+
 
 inactivity <- "function idleTimer() {
 var t = setTimeout(logout, 120000);

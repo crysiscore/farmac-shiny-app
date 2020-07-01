@@ -14,16 +14,14 @@
 library(dplyr)
 library(RPostgreSQL)
 
-
 wd <- '/data'
 setwd(wd)
 source('misc_scripts.R')
 
 # data.frame with credentials info
 credentials <- data.frame(
-  user = c("admin", "farmac", "farmacia", "idart"),
-  password = c("arv", "idart", "farmacia", "farmac"),
-  password = c("arv", "arm", "farmacia", "farmac"),
+  user = c("admin", "farmac", "farmacia", "idart","paciente"),
+  password = c("arv", "idart", "farmacia", "farmac", "tarv"),
   # comment = c("alsace", "auvergne", "bretagne"), %>% 
   stringsAsFactors = FALSE
 )
@@ -165,17 +163,17 @@ shinyServer(function(input, output , session) {
   # Total de pacientes com pelo menos um levantamento
   total_pat_dispensa <- no_dups_dispenses %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(clinic_name_farmac)  %>%  summarise(total_pacientes_dispensados = n())
   names(total_pat_dispensa)[1] <- "Farmacia"
-  
+  total_pat_dispensa <- add_row(total_pat_dispensa,Farmacia="Total" , total_pacientes_dispensados=sum(total_pat_dispensa$total_pacientes_dispensados))
   # Total de pacientes Referidos por Farmac
   patients <- dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
   
-  total_pat_farmac <- patients %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(clinicname)  %>%  summarise(total_referidos = n())
+  total_pat_farmac <- patients %>% distinct(patientid, .keep_all = TRUE ) %>% filter(imported=='yes') %>%  group_by(clinicname)  %>%  summarise(total_recebidos = n())
   names(total_pat_farmac)[1]<- "Farmacia"
-  
+  total_pat_farmac <- add_row(total_pat_farmac,Farmacia="Total" , total_recebidos=sum(total_pat_farmac$total_recebidos))
   # Total de pacientes Referidos por US
   total_pat_us    <- patients %>% distinct(patientid, .keep_all = TRUE )  %>%  group_by(mainclinicname)  %>%  summarise(total_referidos = n())
   names(total_pat_us)[1]<- "Unidade_Sanitaria"
-  
+  total_pat_us <- add_row(total_pat_us,Unidade_Sanitaria="Total" , total_referidos=sum(total_pat_us$total_referidos))
   # Sumario 
   # #  no server cria nomes de colunas estranhos  ex: Farmacia...1
   # output$df_referidos <- renderTable(total_pat_us)
@@ -186,9 +184,9 @@ shinyServer(function(input, output , session) {
   # Sumario
   
   output$df_referidos <- renderTable(total_pat_us)
-  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia...1', 'total_referidos','total_pacientes_dispensados')
+  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia', 'total_recebidos','total_pacientes_dispensados')
+  #sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia...1', 'total_recebidos','total_pacientes_dispensados')
   names(sumario)[1] <- "Farmacia"
-  names(sumario)[2] <- "total_recebidos"
   output$df_resumo <- renderTable(sumario)
     #on.exit(dbDisconnect(con_farmac_sync), add = TRUE)
 })
