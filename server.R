@@ -166,7 +166,6 @@ shinyServer(function(input, output , session) {
   total_pat_dispensa <- add_row(total_pat_dispensa,Farmacia="Total" , total_pacientes_dispensados=sum(total_pat_dispensa$total_pacientes_dispensados))
   # Total de pacientes Referidos por Farmac
   patients <- dbGetQuery(con_farmac_sync, " select * from sync_temp_patients ;")
-  
   total_pat_farmac <- patients %>% distinct(patientid, .keep_all = TRUE ) %>% filter(imported=='yes') %>%  group_by(clinicname)  %>%  summarise(total_recebidos = n())
   names(total_pat_farmac)[1]<- "Farmacia"
   total_pat_farmac <- add_row(total_pat_farmac,Farmacia="Total" , total_recebidos=sum(total_pat_farmac$total_recebidos))
@@ -184,9 +183,11 @@ shinyServer(function(input, output , session) {
   # Sumario
   
   output$df_referidos <- renderTable(total_pat_us)
-  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia', 'total_recebidos','total_pacientes_dispensados')
-  #sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia...1', 'total_recebidos','total_pacientes_dispensados')
+  
+  #sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia', 'total_recebidos','total_pacientes_dispensados')
+  sumario <- bind_cols(total_pat_farmac,total_pat_dispensa)  %>% select('Farmacia...1', 'total_recebidos','total_pacientes_dispensados')
   names(sumario)[1] <- "Farmacia"
   output$df_resumo <- renderTable(sumario)
-    #on.exit(dbDisconnect(con_farmac_sync), add = TRUE)
+  #on.exit(dbDisconnect(con_farmac_sync), add = TRUE)
+  
 })

@@ -1,4 +1,3 @@
-
 # library(RPostgreSQL)
 # library(stringi)
 # library(stringdist)
@@ -28,3 +27,4 @@
 # local.postgres.db.name='farmac_sync'                           # ******** modificar
 # local.postgres.host='172.18.0.3'                        # ******** modificar
 # local.postgres.port=5432                                # ******** modificar
+
