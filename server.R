@@ -144,7 +144,7 @@ shinyServer(function(input, output , session) {
         names(df_pat_dispenses)[1]<- "Data dispensa"
         names(df_pat_dispenses)[2]<- "Regime"
         names(df_pat_dispenses)[4]<- "ARV"
-        names(df_pat_dispenses)[5]<- "Data Prox. Consulta"
+        names(df_pat_dispenses)[5]<- "Data Prox. Levant"
         output$df_dispenses <- renderTable(df_pat_dispenses)
       }
       

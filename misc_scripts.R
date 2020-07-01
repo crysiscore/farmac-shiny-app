@@ -13,7 +13,6 @@
  local.postgres.port=5432                                # ******** modificar
 
 
-
 # library(RPostgreSQL)
 # #library(stringi)
 # #library(stringdist)
